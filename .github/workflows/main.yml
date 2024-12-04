@@ -32,9 +32,13 @@ jobs:
 
     - name: Build and Tag Docker Image
       run: |
-        IMAGE_URI=${{ secrets.AWS_ECR_REPO_URI }}:latest
-          docker build -t $IMAGE_URI .
-          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+        ECR_IMAGE_URI=${{ secrets.AWS_ECR_REPO_URI }}:latest
+        GAR_IMAGE_URI=${{ secrets.GCP_GAR_REPO_URI }}/simple-go-app:latest
+
+        docker build -t $ECR_IMAGE_URI .
+        docker tag $ECR_IMAGE_URI $GAR_IMAGE_URI
+        echo "ECR_IMAGE_URI=$ECR_IMAGE_URI" >> $GITHUB_ENV
+        echo "GAR_IMAGE_URI=$GAR_IMAGE_URI" >> $GITHUB_ENV
 
     - name: Push Docker Image to ECR
       run: |
@@ -46,7 +50,7 @@ jobs:
         credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
     - name: Configure Docker for GAR
-      run: gcloud auth configure-docker asia-southeast1-docker.pkg.dev
+      run: gcloud auth configure-docker australia-southeast1-docker.pkg.dev
 
     - name: Push Docker Image to GAR
       run: |
