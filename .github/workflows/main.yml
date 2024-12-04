@@ -35,14 +35,17 @@ jobs:
         ECR_IMAGE_URI=${{ secrets.AWS_ECR_REPO_URI }}:latest
         GAR_IMAGE_URI=${{ secrets.GCP_GAR_REPO_URI }}/simple-go-app:latest
 
+        # Build and tag the Docker images
         docker build -t $ECR_IMAGE_URI .
         docker tag $ECR_IMAGE_URI $GAR_IMAGE_URI
+        
+        # Export the image URIs as environment variables
         echo "ECR_IMAGE_URI=$ECR_IMAGE_URI" >> $GITHUB_ENV
         echo "GAR_IMAGE_URI=$GAR_IMAGE_URI" >> $GITHUB_ENV
 
     - name: Push Docker Image to ECR
       run: |
-        docker push ${{ env.IMAGE_URI }}
+        docker push $ECR_IMAGE_URI
 
     - name: Authenticate to GCP
       uses: google-github-actions/auth@v1
@@ -54,4 +57,4 @@ jobs:
 
     - name: Push Docker Image to GAR
       run: |
-        docker push ${{ env.GAR_IMAGE_URI }}
+        docker push $GAR_IMAGE_URI
