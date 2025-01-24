@@ -18,7 +18,7 @@ CMD ["./main"]
 
 # Install Sysdig Serverless Agent
 ARG SYSDIG_AGENT_VERSION=latest
-FROM quay.io/sysdig/workload-agent:${SYSDIG_AGENT_VERSION} AS workload-agent
+FROM quay.io/sysdig/workload-agent:latest AS workload-agent
 
 FROM falcosecurity/event-generator:latest
 
