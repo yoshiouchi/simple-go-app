@@ -8,11 +8,12 @@ WORKDIR /app
 COPY . .
 
 # Build the Go application
-RUN go build -o main .
+RUN GOOS=linux GOARCH=amd64  go build -o main .
 
 # Expose port 8080 to the outside world (if you have a web server or similar)
 EXPOSE 8080
 
 # Command to run the executable
 CMD ["./main"]
+
 
