@@ -16,13 +16,3 @@ EXPOSE 8080
 # Command to run the executable
 CMD ["./main"]
 
-# Install Sysdig Serverless Agent
-ARG SYSDIG_AGENT_VERSION=latest
-RUN echo "SYSDIG_AGENT_VERSION is set to ${SYSDIG_AGENT_VERSION}"
-FROM quay.io/sysdig/workload-agent:${SYSDIG_AGENT_VERSION} AS workload-agent
-
-FROM falcosecurity/event-generator:latest
-
-COPY --from=workload-agent /opt/draios /opt/draios
-ENTRYPOINT ["/opt/draios/bin/instrument"]
-CMD ["/bin/event-generator", "run", "syscall", "--all", "--loop"]
